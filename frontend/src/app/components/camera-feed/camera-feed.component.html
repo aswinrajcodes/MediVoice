@@ -1,0 +1,34 @@
+<div class="camera-container">
+  <div class="camera-header">
+    <h3>📸 Camera Feed</h3>
+    <button class="camera-toggle" (click)="toggleCamera()"
+            [class.active]="cameraService.cameraActive()">
+      @if (cameraService.cameraActive()) {
+        Disable Camera
+      } @else {
+        Enable Camera
+      }
+    </button>
+  </div>
+
+  <div class="camera-viewport">
+    <video #videoElement autoplay playsinline muted
+           [class.hidden]="!cameraService.cameraActive()"></video>
+
+    @if (!cameraService.cameraActive()) {
+      <div class="camera-placeholder">
+        <div class="camera-icon">📷</div>
+        <p>Camera is off</p>
+        <p class="camera-hint">Enable to show rashes, wounds, pill bottles, or injuries to MediVoice</p>
+      </div>
+    }
+
+    @if (cameraService.cameraActive()) {
+      <span class="camera-label">● LIVE — Sending frames to MediVoice</span>
+    }
+  </div>
+
+  @if (cameraService.cameraError()) {
+    <p class="camera-error">⚠️ {{ cameraService.cameraError() }}</p>
+  }
+</div>

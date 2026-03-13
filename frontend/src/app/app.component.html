@@ -1,0 +1,31 @@
+<div class="medivoice-app">
+  <header class="header">
+    <div class="logo">
+      <span class="cross">✚</span>
+      <span class="brand">MediVoice</span>
+    </div>
+    <p class="tagline">Always Listening. Always Watching. Always Ready.</p>
+    <span class="disclaimer">⚕️ Not a substitute for professional medical advice</span>
+  </header>
+
+  <main class="main-grid">
+    <app-camera-feed />
+    <app-transcript />
+  </main>
+
+  <app-voice-panel />
+
+  @if (wsService.isEmergency()) {
+    <app-emergency-panel
+      [level]="'high'"
+      [reason]="wsService.emergencyReason()"
+      (dismissed)="onEmergencyDismissed()" />
+  }
+
+  @if (wsService.isMediumAlert()) {
+    <app-emergency-panel
+      [level]="'medium'"
+      [reason]="wsService.emergencyReason()"
+      (dismissed)="onEmergencyDismissed()" />
+  }
+</div>

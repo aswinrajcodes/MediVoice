@@ -1,0 +1,19 @@
+<div class="transcript-wrapper">
+  <h3>💬 Conversation</h3>
+  <div class="transcript-container" #scrollContainer>
+    @if (wsService.transcriptMessages().length === 0) {
+      <div class="transcript-empty">
+        <p>👋 Welcome to MediVoice</p>
+        <p class="hint">Click the microphone and describe your symptoms. MediVoice will listen and respond with calm, clear guidance.</p>
+      </div>
+    }
+
+    @for (msg of wsService.transcriptMessages(); track msg.timestamp) {
+      <div class="bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+        <div class="bubble-role">{{ msg.role === 'user' ? '🧑 You' : '🩺 MediVoice' }}</div>
+        <div class="bubble-text">{{ msg.text }}</div>
+        <div class="bubble-time">{{ msg.timestamp | date:'shortTime' }}</div>
+      </div>
+    }
+  </div>
+</div>

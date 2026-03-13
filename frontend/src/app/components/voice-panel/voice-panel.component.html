@@ -1,0 +1,28 @@
+<div class="voice-controls">
+  <div class="status-text">{{ statusText() }}</div>
+
+  <div class="mic-row">
+    @if (audioService.isPlaying()) {
+      <button class="interrupt-button" (click)="onInterrupt()" title="Interrupt MediVoice">
+        ✋ Interrupt
+      </button>
+    }
+
+    <button
+      class="mic-button"
+      [class.recording]="audioService.isRecording()"
+      [class.disabled]="wsService.connectionStatus() !== 'connected'"
+      (click)="toggleMic()"
+      [disabled]="wsService.connectionStatus() !== 'connected'"
+      [attr.aria-label]="audioService.isRecording() ? 'Stop recording' : 'Start recording'"
+    >
+      🎙️
+    </button>
+  </div>
+
+  <div class="connection-status">
+    <span class="dot" [class.connected]="wsService.connectionStatus() === 'connected'"
+                      [class.connecting]="wsService.connectionStatus() === 'connecting'"></span>
+    {{ wsService.connectionStatus() }}
+  </div>
+</div>

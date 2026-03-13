@@ -1,0 +1,209 @@
+package com.medivoice.rules;
+
+import com.medivoice.model.TranscriptFact;
+import com.medivoice.model.EmergencyLevel;
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — CARDIAC
+// ═══════════════════════════════════
+rule "Chest Pain Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "chest pain" ||
+        text contains "chest pressure" ||
+        text contains "chest tightness" ||
+        text contains "heart attack" ||
+        text contains "my chest hurts"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Potential cardiac event detected");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — RESPIRATORY
+// ═══════════════════════════════════
+rule "Breathing Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "can't breathe" ||
+        text contains "cannot breathe" ||
+        text contains "difficulty breathing" ||
+        text contains "shortness of breath" ||
+        text contains "choking"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Respiratory emergency detected");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — NEUROLOGICAL
+// ═══════════════════════════════════
+rule "Stroke Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "face drooping" ||
+        text contains "arm weakness" ||
+        text contains "slurred speech" ||
+        text contains "sudden severe headache" ||
+        text contains "stroke"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Potential stroke symptoms detected");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — BLEEDING / TRAUMA
+// ═══════════════════════════════════
+rule "Severe Bleeding Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "won't stop bleeding" ||
+        text contains "severe bleeding" ||
+        text contains "bleeding heavily" ||
+        text contains "lost consciousness" ||
+        text contains "passed out"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Severe bleeding or loss of consciousness detected");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — POISONING
+// ═══════════════════════════════════
+rule "Poisoning Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "overdose" ||
+        text contains "swallowed" ||
+        text contains "poisoning" ||
+        text contains "took too many pills"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Possible poisoning or overdose detected");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — MENTAL HEALTH CRISIS
+// ═══════════════════════════════════
+rule "Self Harm Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "kill myself" ||
+        text contains "want to die" ||
+        text contains "self harm" ||
+        text contains "suicide" ||
+        text contains "end my life"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Mental health crisis — immediate intervention needed");
+end
+
+// ═══════════════════════════════════
+// HIGH SEVERITY — SEVERE ALLERGIC REACTION
+// ═══════════════════════════════════
+rule "Anaphylaxis Emergency"
+    salience 100
+when
+    $t : TranscriptFact(
+        text contains "throat closing" ||
+        text contains "throat swelling" ||
+        text contains "severe allergic" ||
+        text contains "anaphylaxis" ||
+        text contains "can't swallow"
+    )
+then
+    $t.setSeverity(EmergencyLevel.HIGH);
+    $t.setReason("Potential anaphylaxis or severe allergic reaction");
+end
+
+// ═══════════════════════════════════
+// MEDIUM SEVERITY
+// ═══════════════════════════════════
+rule "High Fever Warning"
+    salience 50
+when
+    $t : TranscriptFact(
+        severity != EmergencyLevel.HIGH,
+        (text contains "high fever" ||
+        text contains "fever over 103" ||
+        text contains "fever over 104" ||
+        text contains "102 fever" ||
+        text contains "103 fever")
+    )
+then
+    $t.setSeverity(EmergencyLevel.MEDIUM);
+    $t.setReason("High fever detected — monitor closely");
+end
+
+rule "Severe Pain Warning"
+    salience 50
+when
+    $t : TranscriptFact(
+        severity != EmergencyLevel.HIGH,
+        (text contains "severe pain" ||
+        text contains "10 out of 10" ||
+        text contains "9 out of 10" ||
+        text contains "worst pain" ||
+        text contains "unbearable pain")
+    )
+then
+    $t.setSeverity(EmergencyLevel.MEDIUM);
+    $t.setReason("Severe pain level reported");
+end
+
+rule "Vomiting Blood Warning"
+    salience 50
+when
+    $t : TranscriptFact(
+        severity != EmergencyLevel.HIGH,
+        (text contains "vomiting blood" ||
+        text contains "blood in urine" ||
+        text contains "blood in stool" ||
+        text contains "coughing blood")
+    )
+then
+    $t.setSeverity(EmergencyLevel.MEDIUM);
+    $t.setReason("Blood in body fluids — medical attention needed");
+end
+
+rule "Head Injury Warning"
+    salience 50
+when
+    $t : TranscriptFact(
+        severity != EmergencyLevel.HIGH,
+        (text contains "hit my head" ||
+        text contains "head injury" ||
+        text contains "concussion" ||
+        text contains "seeing double")
+    )
+then
+    $t.setSeverity(EmergencyLevel.MEDIUM);
+    $t.setReason("Head injury reported — monitor for concussion signs");
+end
+
+rule "Persistent Vomiting Warning"
+    salience 50
+when
+    $t : TranscriptFact(
+        severity != EmergencyLevel.HIGH,
+        (text contains "can't keep anything down" ||
+        text contains "vomiting for days" ||
+        text contains "dehydrated" ||
+        text contains "haven't eaten in days")
+    )
+then
+    $t.setSeverity(EmergencyLevel.MEDIUM);
+    $t.setReason("Dehydration risk from persistent vomiting — seek medical care");
+end
